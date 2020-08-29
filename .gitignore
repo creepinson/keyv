@@ -78,3 +78,9 @@ Icon
 Network Trash Folder
 Temporary Items
 .apdisk
+
+# Distribution
+dist
+
+# Environemnt (secrets)
+.env*

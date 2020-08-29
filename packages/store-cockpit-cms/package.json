@@ -1,0 +1,16 @@
+{
+  "name": "@throw-out-error/store-cockpit-cms",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@throw-out-error/storez": "workspace:*",
+    "axios": "^0.20.0"
+  },
+  "keywords": [],
+  "author": "Theo Paris"
+}
