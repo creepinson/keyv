@@ -6,13 +6,13 @@
     "scripts": {
         "build:main": "tsc",
         "build": "pnpm run build:main; pnpm run build -r",
-        "postinstall": "npm run build",
+        "prepublishOnly": "npm run build",
         "test": "ts-mocha -p tsconfig.testing.json test/**/*.spec.ts",
         "coverage": "nyc report --reporter=text-lcov | coveralls"
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/creepinson/keyv.git"
+        "url": "git+https://github.com/creepinson/storez.git"
     },
     "keywords": [
         "key",
@@ -22,11 +22,15 @@
         "ttl"
     ],
     "license": "MIT",
+    "homepage": "https://github.com/creepinson/storez",
     "bugs": {
-        "url": "https://github.com/creepinson/keyv/issues"
+        "url": "https://github.com/creepinson/storez/issues"
     },
     "types": "dist/index.d.ts",
-    "homepage": "https://github.com/creepinson/keyv",
+    "files": [
+        "dist",
+        "packages/*/dist"
+    ],
     "dependencies": {
         "json-buffer": "3.0.1",
         "safe-filter": "^1.0.4",
