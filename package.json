@@ -8,7 +8,8 @@
         "build": "pnpm run build:main; pnpm run build -r",
         "prepublishOnly": "npm run build",
         "test": "ts-mocha -p tsconfig.testing.json test/**/*.spec.ts",
-        "coverage": "nyc report --reporter=text-lcov | coveralls"
+        "coverage": "nyc report --reporter=text-lcov | coveralls",
+        "publish:all": "pnpm publish -r --access=public"
     },
     "repository": {
         "type": "git",
