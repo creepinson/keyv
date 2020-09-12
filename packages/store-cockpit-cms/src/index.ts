@@ -4,6 +4,7 @@ import {
     ContentStore,
     Collection,
     CollectionData,
+    Item,
 } from "@throw-out-error/storez";
 
 /**
@@ -24,14 +25,17 @@ export class CockpitStore extends ContentStore {
      * Fetches a collection from the cockpit CMS.
      * @param name the name of the collection
      */
-    col<T>(name: string): Collection<T> {
+    col<T extends Item>(name: string): Collection<T, CockpitStore> {
         if (!this.collections[name])
             this.collections[name] = new CockpitCollection(this, name);
-        return this.collections[name] as Collection<T>;
+        return this.collections[name] as Collection<T, CockpitStore>;
     }
 }
 
-export class CockpitCollection<T> extends Collection<T> {
+export class CockpitCollection<T extends Item> extends Collection<
+    T,
+    CockpitStore
+> {
     /**
      * Fetches a collection from the provided cockpit content api.
      */
@@ -40,7 +44,9 @@ export class CockpitCollection<T> extends Collection<T> {
             const { data } = await axios.get(
                 `${this.store.options.apiUrl}/collections/get/${this.name}?token=${this.store.options.apiToken}`,
             );
-            if (data) return data as CollectionData<T>;
+            let transformedData: CollectionData<T> = data as CollectionData<T>;
+            transformedData.entries = transformedData.entries.map(e => e.id = (e as any)._id)
+            if (data) return transformedData;
         } catch (e) {
             console.log(
                 `An error occurred while fetching collection ${this.name}.`,

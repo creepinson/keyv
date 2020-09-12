@@ -1,4 +1,5 @@
 import { Expression, matches } from "safe-filter";
+import { Item } from "./item";
 import { Collection, CollectionData, ContentStore, FieldData } from "./types";
 
 export const loadStore = async (
@@ -26,12 +27,15 @@ export class MemoryStore extends ContentStore {
         super();
     }
 
-    col<T>(name: string): Collection<T> {
+    col<T extends Item>(name: string): Collection<T, MemoryStore> {
         return new MemoryCollection<T>(this, name);
     }
 }
 
-export class MemoryCollection<T> extends Collection<T> {
+export class MemoryCollection<T extends Item> extends Collection<
+    T,
+    MemoryStore
+> {
     data: Record<string, any>;
 
     constructor(store: MemoryStore, collectionName: string) {
@@ -67,3 +71,4 @@ export class MemoryCollection<T> extends Collection<T> {
 }
 
 export * from "./types";
+export * from "./item";

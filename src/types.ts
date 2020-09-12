@@ -1,7 +1,7 @@
 "use strict";
 
-import { EventEmitter } from "events";
 import { Expression } from "safe-filter";
+import { Item } from "./item";
 
 export type FieldData = {
     name: string;
@@ -17,7 +17,7 @@ export type CollectionData<T> = {
 };
 
 export abstract class ContentStore {
-    protected collections: Record<string, Collection<unknown>>;
+    protected collections: Record<string, Collection<Item, ContentStore>>;
     options: Record<string, unknown>;
 
     constructor(opts: Record<string, unknown> = {}) {
@@ -30,7 +30,7 @@ export abstract class ContentStore {
      */
     toJson() {
         const printCollections = () => {
-            const collections: Record<string, Collection<unknown>> = {};
+            const collections: Record<string, Collection<Item, ContentStore>> = {};
             for (let k in this.collections) {
                 const c = this.collections[k];
                 delete c.store;
@@ -49,14 +49,14 @@ export abstract class ContentStore {
      * Fetches a collection from the cockpit CMS.
      * @param name the name of the collection
      */
-    abstract col<T>(name: string): Collection<T>;
+    abstract col<T extends Item>(name: string): Collection<T, ContentStore>;
 }
 
-export abstract class Collection<T> {
-    store: ContentStore;
+export abstract class Collection<T extends Item, S extends ContentStore> {
+    store: S;
     name: string;
 
-    constructor(store: ContentStore, collectionName: string) {
+    constructor(store: S, collectionName: string) {
         this.store = store;
         this.name = collectionName;
     }
@@ -64,12 +64,12 @@ export abstract class Collection<T> {
     /**
      * Fetches a collection from the provided content store.
      */
-    abstract async fetch(): Promise<CollectionData<T> | undefined>;
+    abstract fetch(): Promise<CollectionData<T> | undefined>;
 
     /**
      * Fetches entries of a collection from the provided content store.
      * If the query is specified it will filter out fields that do not match this query.
      * @param query Can be {} or a key-value map of the fields to match against.
      */
-    abstract async fetchEntries(query: Expression): Promise<T[]>;
+    abstract fetchEntries(query: Expression): Promise<T[]>;
 }

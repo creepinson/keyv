@@ -1,7 +1,7 @@
 {
   "name": "@throw-out-error/store-cockpit-cms",
-  "version": "1.0.0",
-  "description": "",
+  "version": "1.0.1",
+  "description": "Cockpit cms content store for storez",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
