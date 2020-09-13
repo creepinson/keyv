@@ -14,7 +14,7 @@
         "prepublishOnly": "pnpm run build",
         "test": "ts-mocha -p tsconfig.testing.json test/**/*.spec.ts",
         "coverage": "nyc report --reporter=text-lcov | coveralls",
-        "publish:all": "pnpm publish -r --access=public"
+        "publish:all": "pnpm publish --access=public"
     },
     "repository": {
         "type": "git",
