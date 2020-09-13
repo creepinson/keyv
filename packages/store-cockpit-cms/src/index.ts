@@ -45,7 +45,10 @@ export class CockpitCollection<T extends Item> extends Collection<
                 `${this.store.options.apiUrl}/collections/get/${this.name}?token=${this.store.options.apiToken}`,
             );
             let transformedData: CollectionData<T> = data as CollectionData<T>;
-            transformedData.entries = transformedData.entries.map(e => e.id = (e as any)._id)
+            transformedData.entries = transformedData.entries.map((e) => ({
+                ...e,
+                id: (e as any)._id,
+            }));
             if (data) return transformedData;
         } catch (e) {
             console.log(
@@ -61,7 +64,7 @@ export class CockpitCollection<T extends Item> extends Collection<
      * If the query is specified it will filter out fields that do not match this query.
      * @param query Can be {} or a key-value map of the fields to match against.
      */
-    async fetchEntries(query: Expression): Promise<T[]> {
+    async fetchEntries(query?: Expression): Promise<T[]> {
         const data = await this.fetch();
         if (data) {
             return data.entries.filter((e) =>
