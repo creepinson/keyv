@@ -1,6 +1,6 @@
 {
     "name": "@throw-out-error/storez",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "description": "Simple key-value storage with support for multiple backends",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",

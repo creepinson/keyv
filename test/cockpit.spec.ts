@@ -13,7 +13,7 @@ describe("Cockpit store", () => {
         });
         const result = await store
             .col(process.env.COLLECTION || "project")
-            .fetchEntries({});
+            .fetchEntries();
         assert(result.length && result.length > 0);
     });
 });

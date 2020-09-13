@@ -71,5 +71,5 @@ export abstract class Collection<T extends Item, S extends ContentStore> {
      * If the query is specified it will filter out fields that do not match this query.
      * @param query Can be {} or a key-value map of the fields to match against.
      */
-    abstract fetchEntries(query: Expression): Promise<T[]>;
+    abstract fetchEntries(query?: Expression): Promise<T[]>;
 }
