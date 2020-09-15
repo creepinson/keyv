@@ -5,8 +5,7 @@
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "files": [
-        "dist",
-        "packages/*/dist"
+        "dist"
     ],
     "scripts": {
         "build:main": "tsc",
@@ -34,6 +33,7 @@
     },
     "dependencies": {
         "json-buffer": "3.0.1",
+        "rxjs": "^6.6.3",
         "safe-filter": "^1.0.5",
         "typescript": "^4.0.2"
     },

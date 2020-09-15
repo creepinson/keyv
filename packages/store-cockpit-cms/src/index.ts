@@ -5,7 +5,10 @@ import {
     Collection,
     CollectionData,
     Item,
+    RetrievalResult,
 } from "@throw-out-error/storez";
+import { Observable } from "rxjs";
+import { map } from "rxjs/operators";
 
 /**
  * An api that interfaces with https://getcockpit.com,
@@ -39,24 +42,43 @@ export class CockpitCollection<T extends Item> extends Collection<
     /**
      * Fetches a collection from the provided cockpit content api.
      */
-    async fetch(): Promise<CollectionData<T> | undefined> {
-        try {
-            const { data } = await axios.get(
-                `${this.store.options.apiUrl}/collections/get/${this.name}?token=${this.store.options.apiToken}`,
-            );
-            let transformedData: CollectionData<T> = data as CollectionData<T>;
-            transformedData.entries = transformedData.entries.map((e) => ({
-                ...e,
-                id: (e as any)._id,
-            }));
-            if (data) return transformedData;
-        } catch (e) {
-            console.log(
-                `An error occurred while fetching collection ${this.name}.`,
-            );
-            console.error(e.message);
-            return;
-        }
+    fetch(): Observable<RetrievalResult<T>> {
+        return new Observable((observer) => {
+            axios
+                .get(
+                    `${this.store.options.apiUrl}/collections/get/${this.name}?token=${this.store.options.apiToken}`,
+                )
+                .then((response) => response.data)
+                .then((data) => {
+                    let transformedData: CollectionData<T> = data as CollectionData<
+                        T
+                    >;
+                    transformedData.entries = transformedData.entries.map(
+                        (e) => ({
+                            ...e,
+                            id: (e as any)._id,
+                        }),
+                    );
+                    if (transformedData)
+                        observer.next({
+                            info: {
+                                collectionName: this.name,
+                            },
+                            message: "Succesfully retrieved data",
+                            status: true,
+                            data: transformedData,
+                        });
+                })
+                .catch((e) => {
+                    observer.next({
+                        info: {
+                            collectionName: this.name,
+                        },
+                        status: false,
+                        message: e.message,
+                    });
+                });
+        });
     }
 
     /**
@@ -64,13 +86,14 @@ export class CockpitCollection<T extends Item> extends Collection<
      * If the query is specified it will filter out fields that do not match this query.
      * @param query Can be {} or a key-value map of the fields to match against.
      */
-    async fetchEntries(query?: Expression): Promise<T[]> {
-        const data = await this.fetch();
-        if (data) {
-            return data.entries.filter((e) =>
-                query ? matches(query, e) : true,
+    fetchEntries(query?: Expression): Observable<T[]> {
+        return this.fetch()
+            .pipe(map((result) => result.data.entries as T[]))
+            .pipe(
+                map((entries) =>
+                    entries.filter((e) => (query ? matches(query, e) : true)),
+                ),
             );
-        } else return [];
     }
 }
 
