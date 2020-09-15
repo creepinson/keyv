@@ -1,6 +1,7 @@
 import { Expression, matches } from "safe-filter";
 import { Item } from "./item";
 import {
+    ChangeResult,
     Collection,
     CollectionData,
     ContentStore,
@@ -50,7 +51,7 @@ export class MemoryCollection<T extends Item> extends Collection<
     T,
     MemoryStore
 > {
-    data: Record<string, any>;
+    protected data: Record<string, T>;
 
     constructor(store: MemoryStore, collectionName: string) {
         super(store, collectionName);
@@ -84,6 +85,20 @@ export class MemoryCollection<T extends Item> extends Collection<
                     entries.filter((e) => (query ? matches(query, e) : true)),
                 ),
             );
+    }
+
+    /**
+     *
+     * @param query The query to match against. C
+     */
+    put(key: string, value: T): Observable<ChangeResult<T>> {
+        return new Observable((observer) => {
+            const initial = this.data[key];
+            this.data[key] = { ...value, ...initial };
+            if (this.data[key] !== initial)
+                observer.next({ initial: initial, new: value });
+            // this.data[query["id"]] = value;
+        });
     }
 }
 

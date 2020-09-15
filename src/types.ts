@@ -87,3 +87,8 @@ export type RetrievalResult<T> = {
 export type RetrievalInfo = {
     collectionName?: string;
 };
+
+export type ChangeResult<T> = {
+    initial: T;
+    new: T;
+};

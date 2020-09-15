@@ -37,8 +37,6 @@ importers:
       ts-mocha: ^7.0.0
       ts-node: ^9.0.0
       typescript: ^4.0.2
-  ../../usr/pnpm-global:
-    specifiers: {}
   packages/store-cockpit-cms:
     dependencies:
       '@throw-out-error/storez': 'link:../..'
